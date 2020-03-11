@@ -82,8 +82,20 @@ namespace IndyBooks.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(long id)
         {
+            //remove a writer from the database
+            if (id > 0)
+            {
+                var author = _db.Writers.Single(w => w.Id == id);
+                _db.Writers.Remove(author);
+                _db.SaveChanges();
+                return Accepted();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
