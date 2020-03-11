@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IndyBooks.Models;
 using IndyBooks.ViewModels;
-using IndyBooks.Migrations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,15 +24,20 @@ namespace IndyBooks.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(new string[] {"value1", "value2"});
+            //entire list of writers (without book information)
+            var writers = _db.Writers.Select(w => new {w.Id, w.Name});
+            return Ok(writers);
         }
 
 
         // GET api/Writer/5
         [HttpGet("{id}")]
-        public string Get(long id)
+        public IActionResult Get(long id)
         {
-            return "value";
+            //The info for a SINGLE writer(without book information)
+            var writers = _db.Writers.Select(w => new { w.Id, w.Name })
+                .Where( w => w.Id == id);
+            return Ok(writers);
         }
         // POST api/<controller>
         [HttpPost]
