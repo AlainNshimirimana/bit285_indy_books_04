@@ -51,6 +51,7 @@ namespace IndyBooks.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Writer writer)
         {
+            //Add a new writer to the list
             Writer newWriter = new Writer
             {
                 Name = writer.Name
@@ -62,8 +63,21 @@ namespace IndyBooks.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public IActionResult Put(long id, [FromBody] Writer writer)
         {
+            //Update writer's information when provided with an acceptable id
+            if (id > 0)
+            {
+                var author = _db.Writers.Single(w => w.Id == id);
+                author.Name = writer.Name;
+                _db.SaveChanges();
+                return Accepted();
+            }
+
+            else
+            {
+                return NotFound();
+            }
         }
 
         // DELETE api/<controller>/5
